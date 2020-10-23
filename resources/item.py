@@ -1,18 +1,21 @@
-from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
+from flask_restful import Resource, reqparse
 
 from models.item import ItemModel
+
 
 class Item(Resource):
     TABLE_NAME = 'items'
 
     parser = reqparse.RequestParser()
-    parser.add_argument('price',
+    parser.add_argument(
+        'price',
         type=float,
         required=True,
         help="This field cannot be left blank!"
     )
-    parser.add_argument('store_id',
+    parser.add_argument(
+        'store_id',
         type=int,
         required=True,
         help="Every item needs a store id."
@@ -27,7 +30,9 @@ class Item(Resource):
 
     def post(self, name):
         if ItemModel.find_by_name(name):
-            return {'message': "An item with name '{}' already exists.".format(name)}, 400
+            return {
+                'message': f"An item with name '{name}' already exists."
+            }, 400
 
         data = Item.parser.parse_args()
 
@@ -39,8 +44,6 @@ class Item(Resource):
             return {"message": "An error occurred inserting the item."}, 500
 
         return item.in_json(), 201
-
-
 
     @jwt_required()
     def delete(self, name):
@@ -69,5 +72,4 @@ class ItemList(Resource):
     TABLE_NAME = 'items'
 
     def get(self):
-        # return {'items': list(map(lambda x: x.in_json(), ItemModel.query.all()))}
         return {'items': [item.in_json() for item in ItemModel.query.all()]}
