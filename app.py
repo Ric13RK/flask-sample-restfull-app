@@ -10,14 +10,18 @@ from security import authenticate, identity
 
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PROPAGATE_EXCEPTIONS'] = true
+
+app.config['SQLALCHEMY_DATABASE_URI'] = os.envget(
+    'FLASK_DATABASE_URL', 'sqlite:///data.db')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = bool(
+    os.getenv('FLASK_SQLALCHEMY_TRACK_MODIFICATIONS', 'False'))
+app.config['PROPAGATE_EXCEPTIONS'] = bool(
+    os.getenv('FLASK_PROPAGATE_EXCEPTIONS', 'True'))
+# TODO: change ('Rishi') default app secret key to random 10 char key
 app.secret_key = os.getenv('FLASK_APP_SECRET_KEY', 'Rishi')
 api = Api(app)
 
 jwt = JWT(app, authenticate, identity)
-
 
 api.add_resource(Store, '/store/<string:name>')
 api.add_resource(Item, '/item/<string:name>')
