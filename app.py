@@ -11,7 +11,7 @@ from security import authenticate, identity
 
 app = Flask(__name__)
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.envget(
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv(
     'FLASK_DATABASE_URL', 'sqlite:///data.db')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = bool(
     os.getenv('FLASK_SQLALCHEMY_TRACK_MODIFICATIONS', 'False'))
