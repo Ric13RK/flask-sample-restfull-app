@@ -1,0 +1,41 @@
+version: 2.1
+
+# workflows:
+#   main:
+#     jobs:
+#       - build:
+#           # This "filter" is required to run on tags
+#           filters:
+#             tags:
+#               only: /prod-.*/
+#             branches:
+#               ignore: /.*/
+#       - test:
+#           requires:
+#             - build
+#           context: test
+
+jobs:
+  build:
+    docker:
+      # https://circleci.com/docs/2.0/circleci-images/#python
+      - image: circleci/python:3.8-buster
+    steps:
+      - checkout
+      - run: echo "checkout repo building docker image"
+      - run:
+          command: >
+            docker build -t rishi/test-flask .
+  
+  test:
+    docker:
+      - image: circleci/python:3.8-buster
+    steps:
+      - checkou
+      - run: echo "checkout repo for test"
+
+workflows:
+  main:
+    jobs:
+      - build
+      - test
