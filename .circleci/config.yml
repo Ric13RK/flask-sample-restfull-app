@@ -28,9 +28,3 @@ jobs:
     steps:
       - checkout
       - run: echo "checkout repo for test"
-
-workflows:
-  main:
-    jobs:
-      - build
-      - test
