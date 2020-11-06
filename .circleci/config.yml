@@ -1,19 +1,12 @@
 version: 2.1
 
-# workflows:
-#   main:
-#     jobs:
-#       - build:
-#           # This "filter" is required to run on tags
-#           filters:
-#             tags:
-#               only: /prod-.*/
-#             branches:
-#               ignore: /.*/
-#       - test:
-#           requires:
-#             - build
-#           context: test
+workflows:
+  main:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
 
 jobs:
   build:
