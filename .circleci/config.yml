@@ -31,10 +31,10 @@ jobs:
             python -m pytest .\test\
       - run: echo "testing ends"
   docker_build:
-    filters:
-      branches:
-        only:
-          - master
+    # filters:
+    #   branches:
+    #     only:
+    #       - master
     docker:
       # https://circleci.com/docs/2.0/circleci-images/#python
       - image: circleci/python:3.8-buster
