@@ -1,15 +1,40 @@
 version: 2.1
+description: |
+  testing Circleci- test, docker_build and setup_terraform_infra
+
+# orbs:
+#   terraform: 'circleci/terraform@1.1.0'
 
 workflows:
   main:
     jobs:
-      - build
-      - test:
+      - test
+      - docker_build:
           requires:
-            - build
+            - test
 
 jobs:
-  build:
+  test:
+    docker:
+      - image: circleci/python:3.8-buster
+    steps:
+      - checkout
+      - run:
+          name: Install python dependency in a venv
+          command: |
+            python -m venv test
+            . test/bin/activate
+            python -m pip install -r .\requirments.txt
+      - run:
+          name: Run python example test cases
+          command: |
+            python -m pytest .\test\
+      - run: echo "testing ends"
+  docker_build:
+    filters:
+      branches:
+        only:
+          - master
     docker:
       # https://circleci.com/docs/2.0/circleci-images/#python
       - image: circleci/python:3.8-buster
@@ -17,14 +42,17 @@ jobs:
       - checkout
       - setup_remote_docker:
           version: 19.03.13
-      - run: echo "checkout repo building docker image"
       - run:
+          name: Build docker image
           command: >
             docker build -t rishi/test-flask .
   
-  test:
-    docker:
-      - image: circleci/python:3.8-buster
-    steps:
-      - checkout
-      - run: echo "checkout repo for test"
+  # setup_terraform_infra:
+  #   steps:
+  #     - checkout
+  #     - run:
+  #         name: Terraform initialize
+  #         command: >
+  #           terraform init
+  #     - run:
+  #         name: Deploy Develop to AWS
