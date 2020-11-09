@@ -30,7 +30,7 @@ jobs:
           name: Run python example test cases
           command: |
             . venv/bin/activate
-            python -m pytest .\test\
+            python -m pytest test\
       - run: echo "testing ends"
   docker_build:
     # filters:
